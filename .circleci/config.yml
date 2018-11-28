@@ -1,0 +1,51 @@
+version: 2
+jobs:
+  publish_to_internal_test_track:
+    docker:
+      - image: circleci/android:api-28-alpha
+    environment:
+      APP_NAME: com.coffeebuz.coffeebuz  
+    steps:
+      - checkout
+      - run:
+          name: Install android publisher tools
+          command: |
+            sudo pip install google-api-python-client
+            sudo pip install oauth2client==1.5.2
+            sudo pip install pyyaml
+      - run:
+          name: Allow execution
+          command: |
+            chmod a+x ./get_release_fieldvalue.py
+            chmod a+x ./upload.py
+      - run:
+          name: Setup environment variables
+          command: |
+            echo 'export PUBLISHINGAPIKEY="${HOME}/${CIRCLE_PROJECT_REPONAME}/publishingapikey.p12"' >> $BASH_ENV
+            echo 'export APK_VERSION_SHA=$(./get_release_fieldvalue.py apk_version_sha)' >> $BASH_ENV
+      - run:
+          name: Install aws cli
+          command: |
+            pip install awscli --upgrade --user
+      - run:
+          name: Retrieve publishing api key
+          command: |
+            ~/.local/bin/aws s3 cp s3://coffeebuzapks/publishingapikey.p12 $PUBLISHINGAPIKEY
+      - run:
+          name: Retrieve APK
+          command: |
+            ~/.local/bin/aws s3 cp s3:///coffeebuzapks/customerapp/${APK_VERSION_SHA}.apk ${APK_VERSION_SHA}.apk
+      - run:
+          name: Publish APK
+          command: |
+            ./publish.py ${APP_NAME}
+workflows:
+  version: 2
+  publish:
+    jobs:
+      - publish_to_internal_test_track:
+          context: prod
+          filters:
+            branches:
+              only:
+                - master

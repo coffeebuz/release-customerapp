@@ -1,11 +1,5 @@
-# Summary
-
-Version : 0.0.1
-
-# Features
-
-1. Generate QR Code
-
-# Bug Fixes
-
-NA
+name: 0.0.2
+apk_version_sha: fcf9aae3a381bc29cfc0a7b12fdb99d0bad955d3
+notes:
+  - Generate QR code
+  - Dummy feature

@@ -1,29 +1,20 @@
 #!/usr/bin/python
-#
-# Copyright 2014 Google Inc. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the 'License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-"""Uploads an apk to the alpha track."""
+"""Uploads an apk to the test track."""
 
 import argparse
 import sys
+import os
 from apiclient import sample_tools
 from oauth2client import client
 from apiclient.discovery import build
 import httplib2
 import mimetypes
+import yaml
 
+release = yaml.safe_load(open('Release.yaml'))
+releaseNotes = '\n'.join(release['notes'])
+APK_VERSION_SHA = release['apk_sha_version']
 TRACK = 'internal'  # Can be 'alpha', beta', 'production' or 'rollout'
 mimetypes.add_type('application/vnd.android.package-archive', '.apk')
 # Declare command-line flags.
@@ -32,17 +23,16 @@ argparser.add_argument('package_name',
                        help='The package name. Example: com.android.sample')
 argparser.add_argument('apk_file',
                        nargs='?',
-                       default='test.apk',
+                       default=('{}.apk'.format(APK_VERSION_SHA)),
                        help='The path to the APK file to upload.')
 
-SERVICE_ACCOUNT_EMAIL = (
-    'circlecigplay@api-6420716335429443910-981993.iam.gserviceaccount.com')
+SERVICE_ACCOUNT_EMAIL = ( os.environ['GPLAY_SERVICE_ACCOUNT_EMAIL'] )
 
 def main(argv):
   # Authenticate and construct service.
   # Load the key in PKCS 12 format that you downloaded from the Google APIs
   # Console when you created your Service account.
-  f = open('key.p12', 'rb')
+  f = open('publishingapikey.p12', 'rb')
   key = f.read()
   f.close()
 
@@ -83,7 +73,11 @@ def main(argv):
         track=TRACK,
         packageName=package_name,
         body={u'releases': [{
-            u'name': u'My first API release',
+            u'name': release['name'],
+            u'releaseNotes': [{
+                u'language' : 'en-AU',
+                u'text' : releaseNotes
+            }],
             u'versionCodes': [versionCode],
             u'status': u'draft',
         }]}).execute()

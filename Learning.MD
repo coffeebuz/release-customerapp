@@ -1,6 +1,3 @@
-# Sample Upload Scripts 
-
-
 # Internal Test Track
 
 - Add testers list first by going to Google Play Console
