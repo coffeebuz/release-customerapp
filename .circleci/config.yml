@@ -34,6 +34,7 @@ jobs:
       - run:
           name: Retrieve APK
           command: |
+            echo $APK_VERSION_SHA
             ~/.local/bin/aws s3 cp s3:///coffeebuzapks/customerapp/${APK_VERSION_SHA}.apk ${APK_VERSION_SHA}.apk
       - run:
           name: Publish APK
