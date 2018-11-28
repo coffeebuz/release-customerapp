@@ -14,6 +14,7 @@ jobs:
             sudo pip install google-api-python-client
             sudo pip install oauth2client==1.5.2
             sudo pip install pyyaml
+            sudo apt-get install python-openssl
       - run:
           name: Allow execution
           command: |
