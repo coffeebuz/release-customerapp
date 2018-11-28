@@ -12,7 +12,7 @@ import httplib2
 import mimetypes
 import yaml
 
-release = yaml.safe_load(open('Release.yaml'))
+release = yaml.safe_load(open('Release.yml'))
 releaseNotes = '\n'.join(release['notes'])
 APK_VERSION_SHA = release['apk_sha_version']
 TRACK = 'internal'  # Can be 'alpha', beta', 'production' or 'rollout'
