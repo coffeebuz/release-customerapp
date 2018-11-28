@@ -22,7 +22,7 @@ jobs:
           name: Setup environment variables
           command: |
             echo 'export PUBLISHINGAPIKEY="${HOME}/${CIRCLE_PROJECT_REPONAME}/publishingapikey.p12"' >> $BASH_ENV
-            echo 'export APK_VERSION_SHA=$(./get_release_fieldvalue.py apk_version_sha)' >> $BASH_ENV
+            echo 'export APK_VERSION_SHA="$(./get_release_fieldvalue.py apk_version_sha)"' >> $BASH_ENV
       - run:
           name: Install aws cli
           command: |
