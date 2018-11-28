@@ -17,7 +17,7 @@ jobs:
           name: Allow execution
           command: |
             chmod a+x ./get_release_fieldvalue.py
-            chmod a+x ./upload.py
+            chmod a+x ./publish.py
       - run:
           name: Setup environment variables
           command: |
