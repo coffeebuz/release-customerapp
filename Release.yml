@@ -1,5 +1,4 @@
-name: 0.0.2
-apk_version_sha: fcf9aae3a381bc29cfc0a7b12fdb99d0bad955d3
+name: 0.0.3
+apk_version_sha: e283e00431468f8f14485e9791c61361fd3190b8
 notes:
-  - Generate QR code
-  - Dummy feature
+  - Nothing interesting
